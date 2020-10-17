@@ -1,7 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { Grid, makeStyles } from "@material-ui/core";
+
+import AuthenticatedApp from "./auth/authenticated/AuthenticatedApp";
+import UnAuthenticatedApp from "./auth/unauthenticated/UnAuthenticatedApp";
+import { selectCurrentToken } from "../redux/selector/authSelector";
 
 const useStyles = makeStyles((theme) => ({
   container: { width: "100vw", height: "500px" },
@@ -15,8 +20,10 @@ const Welcome = ({ validToken }) => {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (token || validToken) setAuthenticated(true);
-  }, [token, validToken]);
+    if (token) {
+      setAuthenticated(true);
+    }
+  }, [token]);
 
   return (
     <Grid
@@ -38,45 +45,14 @@ const Welcome = ({ validToken }) => {
         lg={6}
         className={classes.boxContainer}
       >
-        <Grid item className={classes.titleText}>
-          <Typography component="span" variant="subtitle2">
-            Logo
-          </Typography>
-          <Typography component="h1" variant="h5">
-            FamBam
-          </Typography>
-        </Grid>
-
-        {authenticated ? (
-          <Button component={Link} to="/messenger">
-            Messenger
-          </Button>
-        ) : (
-          <Fragment>
-            <Grid item>
-              <Button
-                component={Link}
-                to="/signin"
-                variant="contained"
-                color="primary"
-              >
-                Login
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button component={Link} to="/signup" variant="contained">
-                Register
-              </Button>
-            </Grid>
-          </Fragment>
-        )}
+        {authenticated ? <AuthenticatedApp /> : <UnAuthenticatedApp />}
       </Grid>
     </Grid>
   );
 };
 
-const mapStateToProps = (state) => ({
-  validToken: state.auth.validToken,
+const mapStateToProps = createStructuredSelector({
+  validToken: selectCurrentToken,
 });
 
 export default connect(mapStateToProps)(Welcome);

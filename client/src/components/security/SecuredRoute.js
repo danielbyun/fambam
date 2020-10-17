@@ -1,14 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Redirect, Route } from "react-router-dom";
+import { createStructuredSelector } from "reselect";
+import { selectCurrentToken } from "../../redux/selector/authSelector";
 
 const SecuredRoute = ({ component: Component, validToken, ...otherProps }) => {
-  console.log(validToken);
+  const [isAuthenticated] = useState(!!validToken);
+
   return (
     <Route
       {...otherProps}
       render={(props) =>
-        validToken ? (
+        isAuthenticated ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -20,8 +23,8 @@ const SecuredRoute = ({ component: Component, validToken, ...otherProps }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  validToken: state.auth.validToken,
+const mapStateToProps = createStructuredSelector({
+  validToken: selectCurrentToken,
 });
 
 export default connect(mapStateToProps)(SecuredRoute);

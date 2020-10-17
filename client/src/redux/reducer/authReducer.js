@@ -5,6 +5,9 @@ import {
   LOGIN_USER_FAIL,
   LOGIN_USER_START,
   LOGIN_USER_SUCCESS,
+  LOGOUT_USER_FAIL,
+  LOGOUT_USER_START,
+  LOGOUT_USER_SUCCESS,
 } from "../types/authTypes";
 
 const initialState = {
@@ -13,6 +16,9 @@ const initialState = {
   loginLoading: false,
   loginErrorMessage: "",
   loginSuccess: false,
+  logoutLoading: false,
+  logoutErrorMessage: "",
+  logoutSuccess: false,
   registerLoading: false,
   registerErrorMessage: "",
   registerSuccess: false,
@@ -41,6 +47,19 @@ export default (state = initialState, action) => {
         loginLoading: false,
         loginSuccess: true,
       };
+    case LOGOUT_USER_START:
+      return {
+        ...state,
+        logoutLoading: true,
+      };
+    case LOGOUT_USER_FAIL:
+      return {
+        ...state,
+        logoutLoading: false,
+        logoutErrorMessage: payload,
+      };
+    case LOGOUT_USER_SUCCESS:
+      return state;
     case REGISTER_USER_START:
       return {
         ...state,

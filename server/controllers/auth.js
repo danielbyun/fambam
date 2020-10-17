@@ -1,9 +1,17 @@
 const jwt = require("jwt-simple");
 const User = require("../models/User");
 const config = require("../config/config");
+const { addSeconds, addHours } = require("date-fns");
 
 const generateTokenForUser = (user) => {
-  return jwt.encode({ sub: user.id, iat: user.date }, config.secret);
+  return jwt.encode(
+    {
+      sub: user.id,
+      iat: new Date(user.date),
+      exp: addSeconds(new Date(user.date), 15),
+    },
+    config.secret
+  );
 };
 
 exports.signup = (req, res, next) => {

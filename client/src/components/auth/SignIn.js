@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -25,6 +25,8 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import Copyright from "../copyright/Copyright";
 import { signInStartAsync } from "../../redux/actions/authActions";
+import { createStructuredSelector } from "reselect";
+import { selectCurrentToken } from "../../redux/selector/authSelector";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -60,8 +62,8 @@ const SignIn = ({ token: validToken, history, signInStartAsync }) => {
 
   const token = localStorage.getItem("token");
 
-  if (validToken || token) {
-    return <Redirect to="/" />;
+  if (token) {
+    return <Redirect to="/welcome" />;
   }
 
   return (
@@ -79,7 +81,7 @@ const SignIn = ({ token: validToken, history, signInStartAsync }) => {
           onSubmit={async (values) => {
             try {
               await signInStartAsync(values, () => {
-                history.push("/");
+                history.push("/welcome");
               });
             } catch (e) {}
           }}
@@ -183,8 +185,8 @@ const SignIn = ({ token: validToken, history, signInStartAsync }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  token: state.auth.validToken,
+const mapStateToProps = createStructuredSelector({
+  validToken: selectCurrentToken,
 });
 
 export default connect(mapStateToProps, { signInStartAsync })(SignIn);

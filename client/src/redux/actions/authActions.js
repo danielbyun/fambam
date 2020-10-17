@@ -33,7 +33,7 @@ export const signInStartAsync = (form, callback) => async (dispatch) => {
         const { token } = res.data;
         dispatch(signInSuccess(token));
         localStorage.setItem("token", token);
-        // callback();
+        callback();
       })
       .catch((err) => {
         console.error(err);
@@ -62,6 +62,8 @@ export const signOutStartAsync = (form, callback) => async (dispatch) => {
   dispatch(signOutStart());
   try {
     localStorage.removeItem("token");
+    dispatch(signOutSuccess());
+    callback();
   } catch (error) {
     dispatch(signOutError(error));
   }
@@ -95,6 +97,7 @@ export const registerStartAsync = (form, callback) => async (dispatch) => {
       .catch((err) => {
         if (err.response) {
           const { data, status } = err.response;
+          console.log(status);
           console.error(data.error);
           dispatch(registerError(data.error));
         }

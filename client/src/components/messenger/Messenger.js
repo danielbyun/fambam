@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { selectCurrentToken } from "../../redux/selector/authSelector";
 
 const Messenger = ({ token }) => {
   console.log(token);
@@ -7,8 +9,8 @@ const Messenger = ({ token }) => {
   return <div>Messenger</div>;
 };
 
-const mapStateToProps = (state) => ({
-  token: state.auth.validToken,
+const mapStateToProps = createStructuredSelector({
+  validToken: selectCurrentToken,
 });
 
 export default connect(mapStateToProps)(Messenger);

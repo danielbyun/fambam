@@ -1,29 +1,35 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import useLocalStorage from "./hooks/useLocalStorage";
-
-import { Provider } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 
 import {
+  CircularProgress,
   createMuiTheme,
   CssBaseline,
   ThemeProvider,
   useMediaQuery,
 } from "@material-ui/core";
+
 import SignUp from "./components/auth/SignUp";
 import SignIn from "./components/auth/SignIn";
 import Welcome from "./components/Welcome";
 import Messenger from "./components/messenger/Messenger";
-import { store } from "./redux/Store";
 import SecuredRoute from "./components/security/SecuredRoute";
+import Header from "./components/header/Header";
+
+import { persistor } from "./redux/Store";
+import { PersistGate } from "redux-persist/integration/react";
 
 const App = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const [darkMode, setDarkMode] = useState(prefersDarkMode);
-  // const [id, setId] = useLocalStorage("token");
   const authenticationToken = localStorage.getItem("token");
-  const [token, setToken] = useState();
+  const [, setToken] = useState();
 
   useEffect(() => {
     if (authenticationToken) {
@@ -57,17 +63,19 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <Router>
-          <CssBaseline />
+      <CssBaseline />
+      <Router>
+        <PersistGate loading={<CircularProgress />} persistor={persistor}>
+          <Header darkMode={darkMode} setDarkMode={setDarkMode} />
           <Switch>
-            <Route exact path="/welcome" component={Welcome} />
-            <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/signin" component={SignIn} />
-            <SecuredRoute exact path="/messenger" component={Messenger} />
+            <Redirect exact from="/" to="/welcome" component={Welcome} />
+            <SecuredRoute path="/welcome" component={Welcome} />
+            <Route path="/signup" component={SignUp} />
+            <Route path="/signin" component={SignIn} />
+            <SecuredRoute path="/messenger" component={Messenger} />
           </Switch>
-        </Router>
-      </Provider>
+        </PersistGate>
+      </Router>
     </ThemeProvider>
   );
 };

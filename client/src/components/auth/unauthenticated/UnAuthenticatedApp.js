@@ -41,7 +41,15 @@ const UnAuthenticatedApp = () => {
         </Grid>
 
         <Fragment>
-          <Grid item>
+          <Grid
+            xs={6}
+            sm={6}
+            md={6}
+            lg={6}
+            container
+            item
+            justify="space-around"
+          >
             <Button
               component={Link}
               to="/signin"
@@ -50,8 +58,6 @@ const UnAuthenticatedApp = () => {
             >
               Login
             </Button>
-          </Grid>
-          <Grid item>
             <Button component={Link} to="/signup" variant="contained">
               Register
             </Button>
