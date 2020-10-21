@@ -4,18 +4,29 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 
 import { signOutStartAsync } from "../../../redux/actions/authActions";
+import { Button, Divider, Drawer, List, ListItem } from "@material-ui/core";
 
-const DrawerList = ({ history, signOutStartAsync }) => {
+const DrawerList = ({ open, handleClose, history, signOutStartAsync }) => {
   return (
-    <div
-      onClick={async () =>
-        await signOutStartAsync(null, () => {
-          history.push("/");
-        })
-      }
-    >
-      Logout
-    </div>
+    <Drawer open={open} onClose={handleClose}>
+      <List>
+        <ListItem>Chat</ListItem>
+        <ListItem>Covid Tracker</ListItem>
+        <Divider />
+        <ListItem>
+          <Button
+            onClick={async () =>
+              await signOutStartAsync(null, () => {
+                history.push("/");
+                handleClose();
+              })
+            }
+          >
+            Logout
+          </Button>
+        </ListItem>
+      </List>
+    </Drawer>
   );
 };
 
