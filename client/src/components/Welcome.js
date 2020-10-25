@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
-import { Grid, makeStyles } from "@material-ui/core";
+import { CircularProgress, Grid, makeStyles } from "@material-ui/core";
 
 import AuthenticatedApp from "./auth/authenticated/AuthenticatedApp";
 import UnAuthenticatedApp from "./auth/unauthenticated/UnAuthenticatedApp";
@@ -18,10 +18,12 @@ const Welcome = ({ validToken }) => {
   const classes = useStyles();
   const token = localStorage.getItem("token");
   const [authenticated, setAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (token) {
       setAuthenticated(true);
+      setIsLoading(false);
     }
   }, [token]);
 
@@ -33,20 +35,24 @@ const Welcome = ({ validToken }) => {
       alignItems="center"
       className={classes.container}
     >
-      <Grid
-        item
-        container
-        justify="center"
-        alignItems="center"
-        spacing={3}
-        xs={6}
-        sm={6}
-        md={6}
-        lg={6}
-        className={classes.boxContainer}
-      >
-        {authenticated ? <AuthenticatedApp /> : <UnAuthenticatedApp />}
-      </Grid>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <Grid
+          item
+          container
+          justify="center"
+          alignItems="center"
+          spacing={3}
+          xs={6}
+          sm={6}
+          md={6}
+          lg={6}
+          className={classes.boxContainer}
+        >
+          {authenticated ? <AuthenticatedApp /> : <UnAuthenticatedApp />}
+        </Grid>
+      )}
     </Grid>
   );
 };

@@ -24,8 +24,12 @@ import Header from "./components/header/Header";
 
 import { persistor } from "./redux/Store";
 import { PersistGate } from "redux-persist/integration/react";
+import { setDarkTheme } from "./redux/actions/uiActions";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { selectDarkTheme } from "./redux/selector/uiSelector";
 
-const App = () => {
+const App = ({ darkTheme, setDarkTheme }) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const [darkMode, setDarkMode] = useState(prefersDarkMode);
   const authenticationToken = localStorage.getItem("token");
@@ -38,18 +42,18 @@ const App = () => {
   }, [authenticationToken]);
 
   useEffect(() => {
-    setDarkMode(prefersDarkMode);
-  }, [prefersDarkMode]);
+    setDarkMode(darkTheme);
+  }, [darkTheme]);
 
-  useEffect(() => {
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches &&
-      darkMode
-    ) {
-      setDarkMode(true);
-    }
-  }, [darkMode]);
+  // useEffect(() => {
+  //   if (
+  //     window.matchMedia &&
+  //     window.matchMedia("(prefers-color-scheme: dark)").matches &&
+  //     darkMode
+  //   ) {
+  //     setDarkMode(true);
+  //   }
+  // }, [darkMode]);
 
   const theme = useMemo(
     () =>
@@ -80,4 +84,8 @@ const App = () => {
   );
 };
 
-export default App;
+const mapStateToProps = createStructuredSelector({
+  darkTheme: selectDarkTheme,
+});
+
+export default connect(mapStateToProps, { setDarkTheme })(App);

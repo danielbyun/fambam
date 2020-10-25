@@ -4,14 +4,19 @@ import { connect } from "react-redux";
 import {
   AppBar,
   Button,
+  Divider,
   fade,
   Grid,
   IconButton,
   makeStyles,
+  MenuItem,
+  Popover,
+  Switch,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import SettingsIcon from "@material-ui/icons/Settings";
 
 import { createStructuredSelector } from "reselect";
 import { selectCurrentToken } from "../../redux/selector/authSelector";
@@ -19,8 +24,8 @@ import DrawerList from "./drawer/DrawerList";
 import { compose } from "redux";
 import { Link, withRouter } from "react-router-dom";
 import { grey } from "@material-ui/core/colors";
-import clsx from "clsx";
 import { signOutStartAsync } from "../../redux/actions/authActions";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,8 +55,8 @@ const Header = ({
   signOutStartAsync,
 }) => {
   const classes = useStyles();
-  // const [viewMode, setViewMode] = useTheme(darkMode);
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
+  const [settingAnchorEl, setSettingAnchorEl] = useState(null);
 
   const handleClose = () => {
     setIsDrawerOpened(false);
@@ -59,6 +64,14 @@ const Header = ({
 
   const handleOpenDrawer = () => {
     setIsDrawerOpened(!isDrawerOpened);
+  };
+
+  const handleSettingOpen = (e) => {
+    setSettingAnchorEl(e.currentTarget);
+  };
+
+  const handleSettingClose = () => {
+    setSettingAnchorEl(null);
   };
 
   if (validToken) {
@@ -86,6 +99,46 @@ const Header = ({
               lg={12}
               justify="flex-end"
             >
+              <div
+                onClick={(e) => {
+                  handleSettingOpen(e);
+                }}
+              >
+                <IconButton>
+                  <SettingsIcon />
+                </IconButton>
+              </div>
+              <Popover
+                anchorEl={settingAnchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(settingAnchorEl)}
+                onClose={handleSettingClose}
+              >
+                <Typography style={{ padding: "10px" }} variant="h5">
+                  Settings
+                </Typography>
+                <Divider />
+                <MenuItem>
+                  <p style={{ marginBottom: 0 }}>
+                    <Switch
+                      color="primary"
+                      checked={darkMode}
+                      onClick={() => {
+                        // setCurrentViewMode(!prefersDarkMode);
+                        setDarkMode(!darkMode);
+                      }}
+                    />
+                    Dark Theme
+                  </p>
+                </MenuItem>
+              </Popover>
               <Button
                 onClick={async () => {
                   await signOutStartAsync(null, () => {
