@@ -4,5 +4,5 @@ const selectUiTheme = (state) => state.ui;
 
 export const selectDarkTheme = createSelector(
   [selectUiTheme],
-  (theme) => theme.darkMode
+  (theme) => theme.darkTheme
 );

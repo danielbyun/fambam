@@ -18,7 +18,7 @@ import {
 import SignUp from "./components/auth/SignUp";
 import SignIn from "./components/auth/SignIn";
 import Welcome from "./components/Welcome";
-import Messenger from "./components/messenger/Messenger";
+
 import SecuredRoute from "./components/security/SecuredRoute";
 import Header from "./components/header/Header";
 
@@ -28,6 +28,7 @@ import { setDarkTheme } from "./redux/actions/uiActions";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { selectDarkTheme } from "./redux/selector/uiSelector";
+import Messenger from "./components/chatroom/messenger/Messenger";
 
 const App = ({ darkTheme, setDarkTheme }) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -42,8 +43,11 @@ const App = ({ darkTheme, setDarkTheme }) => {
   }, [authenticationToken]);
 
   useEffect(() => {
-    setDarkMode(darkTheme);
-  }, [darkTheme]);
+    if (darkTheme) {
+      setDarkMode(darkTheme);
+      setDarkTheme(darkTheme);
+    }
+  }, [darkTheme, prefersDarkMode]);
 
   // useEffect(() => {
   //   if (

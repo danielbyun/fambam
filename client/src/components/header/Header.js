@@ -5,7 +5,6 @@ import {
   AppBar,
   Button,
   Divider,
-  fade,
   Grid,
   IconButton,
   makeStyles,
@@ -23,9 +22,9 @@ import { selectCurrentToken } from "../../redux/selector/authSelector";
 import DrawerList from "./drawer/DrawerList";
 import { compose } from "redux";
 import { Link, withRouter } from "react-router-dom";
-import { grey } from "@material-ui/core/colors";
 import { signOutStartAsync } from "../../redux/actions/authActions";
 import clsx from "clsx";
+import { setDarkTheme } from "../../redux/actions/uiActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: "inherit",
     "&:hover": {
-      color: fade(grey[50], 0.5),
-      textDecoration: "none",
+      //   color: fade(grey[50], 0.5),
+      textDecoration: "underline",
     },
   },
 }));
@@ -53,6 +52,7 @@ const Header = ({
   history,
   validToken,
   signOutStartAsync,
+  setDarkTheme,
 }) => {
   const classes = useStyles();
   const [isDrawerOpened, setIsDrawerOpened] = useState(false);
@@ -126,12 +126,12 @@ const Header = ({
                 </Typography>
                 <Divider />
                 <MenuItem>
-                  <p style={{ marginBottom: 0 }}>
+                  <p style={{ margin: 0 }}>
                     <Switch
                       color="primary"
                       checked={darkMode}
                       onClick={() => {
-                        // setCurrentViewMode(!prefersDarkMode);
+                        setDarkTheme(!darkMode);
                         setDarkMode(!darkMode);
                       }}
                     />
@@ -165,5 +165,5 @@ const mapStateToProps = createStructuredSelector({
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { signOutStartAsync })
+  connect(mapStateToProps, { signOutStartAsync, setDarkTheme })
 )(Header);

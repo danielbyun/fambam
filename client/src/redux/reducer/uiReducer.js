@@ -1,7 +1,7 @@
 import { SET_DARK_THEME } from "../types/uiTypes";
 
 const initialState = {
-  darkMode: false,
+  darkTheme: false,
 };
 
 export default (state = initialState, action) => {
